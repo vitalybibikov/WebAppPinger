@@ -1,41 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using WebAppPinger.Cqrs.Domain.Commands;
+using WebAppPinger.Cqrs.Domain.Queries;
+using WebAppPinger.Cqrs.Domain.Results;
+using WebAppPinger.Models;
 
 namespace WebAppPinger.Controllers
 {
     [Route("api/[controller]")]
     public class ServiceController
     {
-        [HttpGet]
-        public IEnumerable<SelectorModel> Get()
+        private readonly IMediator mediator;
+
+        public ServiceController(IMediator mediator)
         {
-            throw new NotImplementedException();
+            this.mediator = mediator;
         }
 
         [HttpGet]
-        public SelectorModel Get(int url)
+        public async Task<IEnumerable<EndpointModel>> Get()
         {
-            throw new NotImplementedException();
+            var query = new GetEndpointsQuery();
+            var result = await mediator.Send(query);
+            return result.Endpoints;
         }
 
         [HttpPost]
-        public IActionResult Create()
+        public async Task<CommandResult> Create(string url, int interval)
         {
-            throw new NotImplementedException();
-        }
-
-        [HttpPut]
-        public IActionResult Update()
-        {
-            throw new NotImplementedException();
+            var command = new CreateEndpointCommand
+            {
+                Interval = interval,
+                Url = url
+            };
+            var result = await mediator.Send(command);
+            return result;
         }
 
         [HttpDelete]
-        public IEnumerable<SelectorModel> Delete()
+        public async Task<CommandResult> Delete(string url)
         {
-            throw new NotImplementedException();
+            var command = new DeleteEndpointCommand();
+            command.Url = url;
+            var result = await mediator.Send(command);
+            return result;
         }
     }
 }
