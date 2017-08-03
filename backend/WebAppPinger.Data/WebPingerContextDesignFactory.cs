@@ -17,7 +17,7 @@ namespace WebAppPinger.Data
 
             if (String.IsNullOrEmpty(env))
             {
-                throw new ArgumentException("Set ASPNETCORE_ENVIRONMENT variable first");
+                throw new ArgumentException("Set ASPNETCORE_ENVIRONMENT env variable first.");
             }
             var path = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
             path = Path.Combine(path, MainProject);

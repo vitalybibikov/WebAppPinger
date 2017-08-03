@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using WebAppPinger.Cqrs.Domain.Commands;
 using WebAppPinger.Cqrs.Domain.Results;
@@ -17,21 +18,25 @@ namespace WebAppPinger.Cqrs.Handlers
 
         public async Task<CommandResult> Handle(CreateEndpointCommand message)
         {
+            var command = new CommandResult();
             var entity = new EndpointEntity
             {
                 Interval = message.Interval,
                 Url = message.Url,
                 LastPinged = DateTime.Now
             };
-
-            await Context.AddAsync(entity);
-            var result = await Context.SaveChangesAsync() > 0;
-
-            return new CommandResult
+            if (!Context.Endpoints.Any(x => x.Url == message.Url))
             {
-                Success = result,
-                Id = entity.Id
-            };
+                await Context.AddAsync(entity);
+            }
+            else
+            {
+                command.Message = "Url has already been registered in the application.";
+            }
+
+            command.Success = await Context.SaveChangesAsync() > 0;
+            command.Id = entity.Id;
+            return command;
         }
     }
 }

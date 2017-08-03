@@ -17,11 +17,15 @@ namespace WebAppPinger.Cqrs.Handlers
         public async Task<CommandResult> Handle(UpdateEndpointCommand message)
         {
             var result = await Context.Endpoints.SingleAsync(x => x.Url == message.Url);
-            result.LastPinged = message.LastPinged;
+            if (result != null)
+            {
+                result.LastPinged = message.LastPinged;
+            }
+
             return new CommandResult
             {
                 Success = await Context.SaveChangesAsync() > 0,
-                Id = result.Id
+                Id = result?.Id ?? 0
             };
         }
     }

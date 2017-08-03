@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebAppPinger.Cqrs.Domain.Commands;
 using WebAppPinger.Cqrs.Domain.Results;
@@ -17,12 +16,15 @@ namespace WebAppPinger.Cqrs.Handlers
 
         public async Task<CommandResult> Handle(DeleteEndpointCommand message)
         {
-            var result = await Context.Endpoints.SingleAsync(x => x.Url == message.Url);
-            Context.Remove(result);
+            var result = await Context.Endpoints.FirstOrDefaultAsync(x => x.Url == message.Url);
+            if (result != null)
+            {
+                Context.Remove(result);
+            }
             return new CommandResult
             {
                 Success = await Context.SaveChangesAsync() > 0,
-                Id = result.Id
+                Id = result?.Id ?? 0
             };
         }
     }
