@@ -24,6 +24,7 @@ namespace WebAppPinger.Infrastructure.Job
         }
 
         [AutomaticRetry(Attempts = 1)]
+        [Queue("endpointqueue")]
         public async Task<CommandResult> Execute()
         {
             var result = new CommandResult {Success = true};
