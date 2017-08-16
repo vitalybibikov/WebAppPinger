@@ -16,7 +16,7 @@ namespace WebAppPinger.Cqrs.Handlers
 
         public async Task<CommandResult> Handle(UpdateEndpointCommand message)
         {
-            var result = await Context.Endpoints.SingleAsync(x => x.Url == message.Url);
+            var result = await Context.Endpoints.SingleOrDefaultAsync(x => x.Url == message.Url);
             if (result != null)
             {
                 result.LastPinged = message.LastPinged;

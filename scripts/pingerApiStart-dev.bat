@@ -3,15 +3,18 @@
 echo Started
 
 SET currentPath=%~dp0
-SET path=%~dp0..\backend\WebAppPinger
-SET ASPNETCORE_ENVIRONMENT=dev
+SET authPath=%~dp0..\backend\WebAppPinger
 
-cd %path%
+setx ASPNETCORE_ENVIRONMENT dev
 
-echo %path%
+cd %authPath%
 
-dotnet run 
+echo %authPath%
+
+dotnet run --no-launch-profile
 
 cd %currentPath%
 
 echo Finished
+
+

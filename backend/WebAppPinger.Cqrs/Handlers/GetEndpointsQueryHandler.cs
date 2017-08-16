@@ -21,18 +21,21 @@ namespace WebAppPinger.Cqrs.Handlers
         {
             var entities = await Context.Endpoints.ToListAsync();
             var results = new List<EndpointModel>();
-
-            foreach (var entity in entities)
+            if (entities != null)
             {
-                var model = new EndpointModel
+                foreach (var entity in entities)
                 {
-                    Interval = entity.Interval,
-                    LastPinged = entity.LastPinged,
-                    Url = entity.Url,
-                    Id = entity.Id
-                };
-                results.Add(model);
+                    var model = new EndpointModel
+                    {
+                        Interval = entity.Interval,
+                        LastPinged = entity.LastPinged,
+                        Url = entity.Url,
+                        Id = entity.Id
+                    };
+                    results.Add(model);
+                }
             }
+
             return new GetEndpointsQueryResult
             {
                 Endpoints = results
