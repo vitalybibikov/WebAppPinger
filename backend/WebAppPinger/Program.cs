@@ -14,6 +14,7 @@ namespace WebAppPinger
             WebHost.CreateDefaultBuilder(args)
                 .UseUrls("http://localhost:5030/")
                 .UseStartup<Startup>()
+                .UseApplicationInsights()
                 .Build();
     }
 }

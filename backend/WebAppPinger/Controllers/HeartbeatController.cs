@@ -14,7 +14,7 @@ namespace WebAppPinger.Controllers
         }
 
         // GET api/values
-        [HttpGet]
+        [HttpGet("ping")]
         public IActionResult Get()
         {
             return Ok(manager.Start());

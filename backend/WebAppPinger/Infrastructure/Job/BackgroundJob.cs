@@ -32,12 +32,16 @@ namespace WebAppPinger.Infrastructure.Job
             var results = await mediator.Send(query);
             foreach (var endpoint in results.Endpoints)
             {
-                if (endpoint.NeedsRequest)
+               if (endpoint.NeedsRequest)
                 {
                     try
                     {
                         await requester.FireAndForget(endpoint);
-                        var command = new UpdateEndpointCommand {LastPinged = DateTime.Now};
+                        var command = new UpdateEndpointCommand
+                        {
+                            LastPinged = DateTime.Now,
+                            Url = endpoint.Url
+                        };
                         await mediator.Send(command);
                         result.Success = true;
                     }

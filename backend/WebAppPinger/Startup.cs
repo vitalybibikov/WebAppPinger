@@ -34,10 +34,18 @@ namespace WebAppPinger
 
             Configuration = builder.Build();
 
+            //Configure Serilog
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom
                 .Configuration(Configuration)
+                .WriteTo.ApplicationInsightsTraces(
+                    Configuration.GetSection("ApplicationInsights:InstrumentationKey").Value)
                 .CreateLogger();
+
+            if (env.IsEnvironment("dev"))
+            {
+                builder.AddApplicationInsightsSettings(developerMode: true);
+            }
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
